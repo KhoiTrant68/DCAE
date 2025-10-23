@@ -64,14 +64,14 @@ CUDA_VISIBLE_DEVICES='0' python eval.py --checkpoint [path of the pretrained che
 ### Compress images into bin files
 
 ```bash
-CUDA_VISIBLE_DEVICE=0 python -u ./compress_and_decompress.py --cuda  --data [path of images to be compressed] \
+CUDA_VISIBLE_DEVICES=0 python -u ./compress_and_decompress.py --cuda  --data [path of images to be compressed] \
  --save_path [path for storing the bin files] --mode compress --checkpoint [path of the pretrained checkpoint]
 ```
 
 ### Decompress images from bin files
 
 ```bash
-CUDA_VISIBLE_DEVICE=0 python -u ./compress_and_decompress.py --cuda  --data [path of bin files to be decompressed] \
+CUDA_VISIBLE_DEVICES=0 python -u ./compress_and_decompress.py --cuda  --data [path of bin files to be decompressed] \
  --save_path [path for storing the decompressed images] --mode decompress --checkpoint [path of the pretrained checkpoint]
 ```
 ### Pretrained Model
