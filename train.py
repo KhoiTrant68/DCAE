@@ -36,6 +36,8 @@ import torch.distributed as dist
 
 def init_distributed(args):
 
+    args.distributed = False
+
     if "RANK" in os.environ and "WORLD_SIZE" in os.environ:
         args.rank = int(os.environ["RANK"])
         args.world_size = int(os.environ["WORLD_SIZE"])
@@ -47,11 +49,8 @@ def init_distributed(args):
         )
 
         torch.cuda.set_device(args.local_rank)
-        args.distributed = True
 
-    else:
-        print("Running in single GPU mode")
-        args.distributed = False
+        args.distributed = True
 
 def test_compute_psnr(a, b):
     b = b.to(a.device)
@@ -441,7 +440,7 @@ def main(argv):
     net = net.to(device)
 
     if args.cuda and torch.cuda.device_count() > 1:
-        net = nn.parallel.DistributedDataParallel(net, device_ids=[args.local_rank], output_device=args.local_rank, find_unused_parameters=True)
+        net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[args.local_rank], output_device=args.local_rank, find_unused_parameters=True)
         train_sampler = DistributedSampler(train_dataset)
         test_sampler = DistributedSampler(test_dataset)
         
