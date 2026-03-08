@@ -32,6 +32,16 @@ torch.set_num_threads(8)
 torch.backends.cudnn.deterministic=True
 torch.backends.cudnn.benchmark=False
 
+import torch.distributed as dist
+
+def init_distributed(args):
+    dist.init_process_group(
+        backend="nccl",   # GPU training
+        init_method="env://"
+    )
+
+    torch.cuda.set_device(args.local_rank)
+
 def test_compute_psnr(a, b):
     b = b.to(a.device)
     mse = torch.mean((a - b)**2).item()
@@ -384,6 +394,7 @@ def main(argv):
     # torch.autograd.set_detect_anomaly(True)
 
     args = parse_args(argv)
+    init_distributed(args)
     for arg in vars(args):
         print(arg, ":", getattr(args, arg))
     type = args.type
