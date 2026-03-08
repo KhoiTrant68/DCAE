@@ -35,12 +35,23 @@ torch.backends.cudnn.benchmark=False
 import torch.distributed as dist
 
 def init_distributed(args):
-    dist.init_process_group(
-        backend="nccl",   # GPU training
-        init_method="env://"
-    )
 
-    torch.cuda.set_device(args.local_rank)
+    if "RANK" in os.environ and "WORLD_SIZE" in os.environ:
+        args.rank = int(os.environ["RANK"])
+        args.world_size = int(os.environ["WORLD_SIZE"])
+        args.local_rank = int(os.environ["LOCAL_RANK"])
+
+        dist.init_process_group(
+            backend="nccl",
+            init_method="env://"
+        )
+
+        torch.cuda.set_device(args.local_rank)
+        args.distributed = True
+
+    else:
+        print("Running in single GPU mode")
+        args.distributed = False
 
 def test_compute_psnr(a, b):
     b = b.to(a.device)
