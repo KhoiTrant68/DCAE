@@ -406,7 +406,7 @@ def main(argv):
     )
 
     train_dataset = ImageFolder(args.dataset, split="train", transform=train_transforms)
-    test_dataset = ImageFolder(args.dataset, split="test", transform=test_transforms)
+    test_dataset = ImageFolder(args.dataset, split="valid", transform=test_transforms)
 
     if args.local_rank != -1:
         torch.cuda.set_device(args.local_rank)
