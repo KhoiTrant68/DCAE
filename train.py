@@ -432,7 +432,10 @@ def main(argv):
     if args.local_rank != -1:
         torch.cuda.set_device(args.local_rank)
         device = torch.device("cuda", args.local_rank)
-        torch.distributed.init_process_group(backend="nccl", init_method='env://')
+        if not torch.distributed.is_initialized():
+            torch.distributed.init_process_group(backend="nccl", init_method='env://')
+        else:
+            print(f"Process group already initialized for rank {os.environ.get('RANK')}")
     else: 
         device = "cuda"
         
