@@ -196,7 +196,7 @@ def main(argv):
                 MS_SSIM += compute_msssim(x, out_net["x_hat"])
                 Bit_rate += compute_bpp(out_net)
                 if args.save_path is not None:
-                    os.makedirs(args.save_path)
+                    os.makedirs(args.save_path, exist_ok=True)
                     save_metrics(os.path.join(args.save_path, f"metrics_{img_name.split('.')[0]}.txt"), compute_psnr(x, out_net["x_hat"]), compute_bpp(out_net), compute_msssim(x, out_net["x_hat"]))
                     save_image(out_net["x_hat"], os.path.join(args.save_path, f"decoded_{img_name}"))
     PSNR = PSNR / count
